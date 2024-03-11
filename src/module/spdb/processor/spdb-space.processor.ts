@@ -19,6 +19,8 @@ import { SPDB_SPACE_QUEUE_NAME } from '../constant/spdb.constant'
 export class SpdbSpaceProcessor extends WorkerHost {
   private readonly logger = new Logger(SpdbSpaceProcessor.name)
 
+  private timeoutId: any
+
   constructor(
     private readonly twitterApi: TwitterApi,
     private readonly twitterSpaceService: TwitterSpaceService,
@@ -34,12 +36,22 @@ export class SpdbSpaceProcessor extends WorkerHost {
 
   @OnWorkerEvent('ready')
   onReady() {
-    this.logger.debug('ready')
+    this.logger.warn('ready')
   }
 
   @OnWorkerEvent('drained')
   onDrained() {
     this.logger.debug('drained')
+  }
+
+  @OnWorkerEvent('paused')
+  onPaused() {
+    this.logger.warn('paused')
+  }
+
+  @OnWorkerEvent('resumed')
+  onResumed() {
+    this.logger.warn('resumed')
   }
 
   @OnWorkerEvent('active')
@@ -83,7 +95,8 @@ export class SpdbSpaceProcessor extends WorkerHost {
       if (rateLimit) {
         if (!rateLimit.remaining) {
           const duration = rateLimit.reset - Date.now() + 1000
-          await this.worker.rateLimit(duration)
+          await this.pause(duration)
+          // await this.worker.rateLimit(duration)
           throw Worker.RateLimitError()
         }
       }
@@ -92,5 +105,18 @@ export class SpdbSpaceProcessor extends WorkerHost {
 
     await job.updateProgress(100)
     return space
+  }
+
+  private async pause(duration?: number) {
+    if (this.timeoutId) {
+      return
+    }
+
+    await this.worker.pause()
+
+    this.timeoutId = setTimeout(() => {
+      this.timeoutId = null
+      this.worker.resume()
+    }, duration)
   }
 }
