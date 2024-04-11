@@ -6,10 +6,10 @@ import { GetQuery } from '../../../shared/dto/get-query.dto'
 import { Logger } from '../../../shared/logger/logger'
 import { TwitterGraphqlApi } from '../api/twitter-graphql.api'
 import { AudioSpaceState } from '../enum/twitter-graphql.enum'
-import { TwitterSpaceState } from '../enum/twitter-space.enum'
 import { TwitterSpace } from '../model/twitter-space.entity'
 import { TwitterSpaceRepository } from '../repository/twitter-space.repository'
 import { TwitterSpaceUtil } from '../util/twitter-space.util'
+import { TwitterUserQueueService } from './twitter-user-queue.service'
 import { TwitterUserService } from './twitter-user.service'
 
 @Injectable()
@@ -21,6 +21,7 @@ export class TwitterSpaceService extends BaseService<TwitterSpace> {
   constructor(
     public readonly repository: TwitterSpaceRepository,
     public readonly twitterUserService: TwitterUserService,
+    public readonly twitterUserQueueService: TwitterUserQueueService,
     public readonly twitterGraphqlApi: TwitterGraphqlApi,
   ) {
     super(repository)
@@ -56,9 +57,11 @@ export class TwitterSpaceService extends BaseService<TwitterSpace> {
       await this.savePlaylist(audioSpaces[0]),
     )
 
-    if (space.state === TwitterSpaceState.ENDED) {
-      await this.saveParticipants(audioSpaces[0])
-    }
+    await this.saveParticipants(audioSpaces[0])
+
+    // if (space.state === TwitterSpaceState.ENDED) {
+    //   await this.saveParticipants(audioSpaces[0])
+    // }
 
     return space
   }
@@ -159,7 +162,7 @@ export class TwitterSpaceService extends BaseService<TwitterSpace> {
       // const users = await this.twitterUserService.getByUsernames(usernames)
       // const newUsernames = ArrayUtil.difference(usernames, users.map((v) => v.username))
       const newUsernames = usernames
-      await Promise.allSettled(newUsernames.map((v) => this.twitterUserService.fetchByUsername(v)))
+      await Promise.allSettled(newUsernames.map((v) => this.twitterUserQueueService.addByUsername(v, { priority: 999 })))
     } catch (error) {
       this.logger.error(`saveParticipants: ${error.message}`, null, { id, audioSpace })
     }

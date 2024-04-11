@@ -1,17 +1,17 @@
 import { InjectQueue } from '@nestjs/bullmq'
 import { Injectable } from '@nestjs/common'
 import { JobsOptions, Queue } from 'bullmq'
-import { SPDB_SPACE_QUEUE_NAME } from '../constant/spdb.constant'
+import { TWITTER_SPACE_QUEUE_NAME } from '../constant/twitter.constant'
 
 @Injectable()
-export class SpdbService {
+export class TwitterSpaceQueueService {
   constructor(
-    @InjectQueue(SPDB_SPACE_QUEUE_NAME)
-    private readonly spaceQueue: Queue,
+    @InjectQueue(TWITTER_SPACE_QUEUE_NAME)
+    private readonly queue: Queue,
   ) { }
 
   public async addById(id: string, options?: JobsOptions) {
-    const job = await this.spaceQueue.add(
+    const job = await this.queue.add(
       id,
       { id },
       {

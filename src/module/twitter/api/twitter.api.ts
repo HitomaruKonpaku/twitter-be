@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common'
 import axios, { AxiosHeaders, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
 import { USER_AGENT } from '../../../constant/app.constant'
 import { Logger } from '../../../shared/logger/logger'
-import { TWITTER_API_URL } from '../constant/twitter.constant'
+import { TWITTER_API_URL, TWITTER_PUBLIC_AUTHORIZATION } from '../constant/twitter.constant'
 
 @Injectable()
 export class TwitterApi {
@@ -110,7 +110,7 @@ export class TwitterApi {
 
   private async handleRequest(config: AxiosRequestConfig) {
     const headers = config.headers as AxiosHeaders
-    const authorization = process.env.TWITTER_PUBLIC_AUTHORIZATION
+    const authorization = process.env.TWITTER_PUBLIC_AUTHORIZATION || TWITTER_PUBLIC_AUTHORIZATION
     headers.set('authorization', authorization)
 
     if (!headers.has('x-guest-token')) {
