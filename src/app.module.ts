@@ -6,7 +6,6 @@ import { ScheduleModule } from '@nestjs/schedule'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
-import { SpdbModule } from './module/spdb/spdb.module'
 import { TwitterSpace } from './module/twitter/model/twitter-space.entity'
 import { TwitterUser } from './module/twitter/model/twitter-user.entity'
 import { TwitterModule } from './module/twitter/twitter.module'
@@ -38,7 +37,6 @@ import { TwitterModule } from './module/twitter/twitter.module'
       adapter: ExpressAdapter,
     }),
     TwitterModule,
-    SpdbModule,
   ],
   controllers: [
     AppController,
