@@ -25,7 +25,7 @@ export class TwitterApi {
     this.logger.debug('--> fetchGuestToken')
     const { data } = await axios.request({
       method: 'GET',
-      url: 'https://twitter.com',
+      url: 'https://x.com/?mx=2',
       headers: {
         'user-agent': USER_AGENT,
       },

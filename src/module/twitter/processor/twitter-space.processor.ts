@@ -11,6 +11,7 @@ import { TwitterSpaceService } from '../service/twitter-space.service'
 import { TwitterSpaceUtil } from '../util/twitter-space.util'
 
 @Processor(TWITTER_SPACE_QUEUE_NAME, {
+  // autorun: false,
   limiter: {
     max: NumberUtil.parse(process.env.TWITTER_SPACE_QUEUE_LIMITER_MAX, 1),
     duration: NumberUtil.parse(process.env.TWITTER_SPACE_QUEUE_LIMITER_DURATION, 0),
