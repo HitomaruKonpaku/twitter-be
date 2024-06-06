@@ -1,6 +1,8 @@
 # BASE
 FROM node:18-alpine AS base
 
+RUN apk add --no-cache tini
+
 WORKDIR /app
 
 COPY package*.json ./
@@ -27,4 +29,4 @@ COPY --from=builder      /app/dist ./dist
 
 EXPOSE 8080
 
-CMD ["node", "dist/main"]
+CMD [ "/sbin/tini", "--", "node", "dist/main" ]
