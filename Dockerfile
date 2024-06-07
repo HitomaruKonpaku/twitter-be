@@ -10,7 +10,7 @@ COPY package*.json ./
 # DEPENDENCIES
 FROM base AS dependencies
 
-RUN npm install --only=prod
+RUN npm install --omit=dev
 
 # BUILDER
 FROM base AS builder
