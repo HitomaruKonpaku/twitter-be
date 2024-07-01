@@ -30,7 +30,13 @@ export class TwitterUserProcessor extends BaseProcessor {
       return null
     }
 
-    const user = await this.twitterUserService.fetchByUsername(username)
+    let user = await this.twitterUserService.getByUsername(username)
+    if (user) {
+      await job.updateProgress(100)
+      return user
+    }
+
+    user = await this.twitterUserService.fetchByUsername(username)
     await job.updateProgress(100)
     return user
   }
