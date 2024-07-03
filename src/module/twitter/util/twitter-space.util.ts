@@ -60,18 +60,28 @@ export class TwitterSpaceUtil {
     return obj[state] || null
   }
 
+  public static parseParticipantId(participant: any) {
+    const res = participant.user_results?.result?.rest_id || participant.user_results?.rest_id
+    return res
+  }
+
   public static parseParticipantIds(participants: any[]) {
-    const ids = participants
-      .map((v) => v.user_results?.result?.rest_id || v.user_results?.rest_id)
+    const res = participants
+      .map((v) => TwitterSpaceUtil.parseParticipantId(v))
       .filter((v) => v)
-    return ids
+    return res
+  }
+
+  public static parseParticipantUsername(participant: any) {
+    const res = participant.user_results?.result?.legacy?.screen_name || participant.twitter_screen_name
+    return res
   }
 
   public static parseParticipantUsernames(participants: any[]) {
-    const usernames = participants
-      .map((v) => v.user_results?.result?.legacy?.screen_name || v.twitter_screen_name)
+    const res = participants
+      .map((v) => TwitterSpaceUtil.parseParticipantUsername(v))
       .filter((v) => v)
-    return usernames
+    return res
   }
 
   public static toMasterPlaylistUrl(url: string): string {

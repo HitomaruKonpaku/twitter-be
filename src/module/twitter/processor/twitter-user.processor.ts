@@ -24,13 +24,15 @@ export class TwitterUserProcessor extends BaseProcessor {
 
   async process(job: Job<any, any, string>): Promise<any> {
     const { data } = job
-    const { username } = data
+    const { id, username } = data
     if (!username) {
       job.discard()
       return null
     }
 
-    let user = await this.twitterUserService.getByUsername(username)
+    let user = id
+      ? await this.twitterUserService.getById(id)
+      : await this.twitterUserService.getByUsername(username)
     if (user) {
       await job.updateProgress(100)
       return user

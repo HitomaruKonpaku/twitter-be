@@ -155,14 +155,14 @@ export class TwitterSpaceService extends BaseService<TwitterSpace> {
     const id = TwitterSpaceUtil.parseAudioSpaceId(audioSpace)
     try {
       const { participants } = audioSpace
-      const usernames = [...new Set([
-        ...TwitterSpaceUtil.parseParticipantUsernames(participants.admins),
-        ...TwitterSpaceUtil.parseParticipantUsernames(participants.speakers),
-      ])]
-      // const users = await this.twitterUserService.getByUsernames(usernames)
-      // const newUsernames = ArrayUtil.difference(usernames, users.map((v) => v.username))
-      const newUsernames = usernames
-      await Promise.allSettled(newUsernames.map((v) => this.twitterUserQueueService.addByUsername(v, { priority: 999 })))
+      const tmpUsers = [...participants.admins, participants.speakers].map((v) => {
+        const res = {
+          id: TwitterSpaceUtil.parseParticipantId(v),
+          username: TwitterSpaceUtil.parseParticipantUsername(v),
+        }
+        return res
+      })
+      await Promise.allSettled(tmpUsers.map((v) => this.twitterUserQueueService.add(v, { priority: 999 })))
     } catch (error) {
       this.logger.error(`saveParticipants: ${error.message}`, null, { id, audioSpace })
     }

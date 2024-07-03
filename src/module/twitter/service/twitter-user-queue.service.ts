@@ -10,10 +10,11 @@ export class TwitterUserQueueService {
     private readonly queue: Queue,
   ) { }
 
-  public async addByUsername(username: string, options?: JobsOptions) {
+  public async add(data: { id: string, username: string }, options?: JobsOptions) {
+    const { username } = data
     const job = await this.queue.add(
       username,
-      { username },
+      data,
       {
         jobId: username,
         attempts: 5,
