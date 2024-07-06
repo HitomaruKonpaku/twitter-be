@@ -34,12 +34,23 @@ export class TwitterUserProcessor extends BaseProcessor {
       ? await this.twitterUserService.getById(id)
       : await this.twitterUserService.getByUsername(username)
     if (user) {
-      await job.updateProgress(100)
-      return user
+      const maxAge = NumberUtil.parse(process.env.TWITTER_USER_MAX_AGE, 24 * 60 * 60) * 1000
+      const now = Date.now()
+      const age = now - (user.updatedAt || now)
+      if (age < maxAge) {
+        await job.updateProgress(100)
+        return {
+          _isNew: false,
+          ...user,
+        }
+      }
     }
 
     user = await this.twitterUserService.fetchByUsername(username)
     await job.updateProgress(100)
-    return user
+    return {
+      _isNew: true,
+      ...user,
+    }
   }
 }
