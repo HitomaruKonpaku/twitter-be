@@ -1,5 +1,5 @@
 import { Controller, Get, Param, Query } from '@nestjs/common'
-import { ApiTags } from '@nestjs/swagger'
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger'
 import { GetQuery } from '../../../shared/dto/get-query.dto'
 import { TwitterUserService } from '../service/twitter-user.service'
 
@@ -14,5 +14,11 @@ export class TwitterUserController {
     @Query() opts: GetQuery,
   ) {
     return this.service.getById(id, opts)
+  }
+
+  @Get('count')
+  @ApiOkResponse({ type: Number })
+  count() {
+    return this.service.count()
   }
 }

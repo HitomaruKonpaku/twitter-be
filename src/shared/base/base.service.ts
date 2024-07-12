@@ -16,4 +16,9 @@ export abstract class BaseService<T> {
     const res = await this.repository.getByIds(ids)
     return res
   }
+
+  public async count() {
+    const res = await this.repository.count()
+    return res
+  }
 }

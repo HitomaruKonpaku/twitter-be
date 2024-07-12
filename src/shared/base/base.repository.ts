@@ -1,4 +1,4 @@
-import { Repository } from 'typeorm'
+import { FindManyOptions, Repository } from 'typeorm'
 
 export abstract class BaseRepository<T> {
   constructor(
@@ -18,6 +18,11 @@ export abstract class BaseRepository<T> {
       .createQueryBuilder()
       .andWhere('id IN (:...ids)', { ids })
       .getMany()
+    return res
+  }
+
+  public async count(options?: FindManyOptions<T>) {
+    const res = await this.repository.count(options)
     return res
   }
 
