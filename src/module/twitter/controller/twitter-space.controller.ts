@@ -8,17 +8,17 @@ import { TwitterSpaceService } from '../service/twitter-space.service'
 export class TwitterSpaceController {
   constructor(private readonly service: TwitterSpaceService) { }
 
+  @Get('count')
+  @ApiOkResponse({ type: Number })
+  count() {
+    return this.service.count()
+  }
+
   @Get(':id')
   getById(
     @Param('id') id: string,
     @Query() opts: GetQuery,
   ) {
     return this.service.getById(id, opts)
-  }
-
-  @Get('count')
-  @ApiOkResponse({ type: Number })
-  count() {
-    return this.service.count()
   }
 }
