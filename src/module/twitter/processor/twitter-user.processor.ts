@@ -9,6 +9,7 @@ import { TwitterUserService } from '../service/twitter-user.service'
 @Processor(TWITTER_USER_QUEUE_NAME, {
   autorun: true,
   concurrency: NumberUtil.parse(process.env.TWITTER_USER_QUEUE_CONCURRENCY, 1),
+  maxStalledCount: NumberUtil.parse(process.env.QUEUE_MAX_STALLED_COUNT, 100),
   limiter: {
     max: NumberUtil.parse(process.env.TWITTER_USER_QUEUE_LIMITER_MAX, 1),
     duration: NumberUtil.parse(process.env.TWITTER_USER_QUEUE_LIMITER_DURATION, 0),
