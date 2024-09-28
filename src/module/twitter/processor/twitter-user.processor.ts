@@ -7,7 +7,8 @@ import { TWITTER_USER_QUEUE_NAME } from '../constant/twitter.constant'
 import { TwitterUserService } from '../service/twitter-user.service'
 
 @Processor(TWITTER_USER_QUEUE_NAME, {
-  // autorun: false,
+  autorun: true,
+  concurrency: NumberUtil.parse(process.env.TWITTER_USER_QUEUE_CONCURRENCY, 1),
   limiter: {
     max: NumberUtil.parse(process.env.TWITTER_USER_QUEUE_LIMITER_MAX, 1),
     duration: NumberUtil.parse(process.env.TWITTER_USER_QUEUE_LIMITER_DURATION, 0),
