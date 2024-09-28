@@ -5,6 +5,8 @@ import { Logger } from '../logger/logger'
 export abstract class BaseProcessor extends WorkerHost {
   protected abstract readonly logger: Logger
 
+  protected debug = false
+
   @OnWorkerEvent('error')
   onError(error: any) {
     this.logger.error(`error: ${error.message}`)
@@ -27,12 +29,9 @@ export abstract class BaseProcessor extends WorkerHost {
 
   @OnWorkerEvent('drained')
   onDrained() {
-    this.logger.debug('drained')
-  }
-
-  @OnWorkerEvent('active')
-  onActive(job: Job) {
-    this.logger.debug(`active: ${job.id}`)
+    if (this.debug) {
+      this.logger.debug('drained')
+    }
   }
 
   @OnWorkerEvent('failed')
@@ -40,9 +39,18 @@ export abstract class BaseProcessor extends WorkerHost {
     this.logger.error(`failed: ${job.id} - ${error.message}`)
   }
 
+  @OnWorkerEvent('active')
+  onActive(job: Job) {
+    if (this.debug) {
+      this.logger.debug(`active: ${job.id}`)
+    }
+  }
+
   @OnWorkerEvent('stalled')
   onStalled(jobId: string) {
-    this.logger.debug(`stalled: ${jobId}`)
+    if (this.debug) {
+      this.logger.debug(`stalled: ${jobId}`)
+    }
   }
 
   @OnWorkerEvent('completed')
