@@ -15,14 +15,17 @@ export class TwitterSpaceCron {
 
   @Cron(CronExpression.EVERY_MINUTE)
   async onTick() {
-    this.logger.debug('onTick')
     const limit = NumberUtil.parse(process.env.TWITTER_SPACE_CRON_LIMIT, 0)
+    if (!limit) {
+      return
+    }
+
     const spaces = await this.twitterSpaceRepository.getManyActive({ limit })
     if (!spaces?.length) {
       return
     }
 
-    this.logger.log('onTick#items', { count: spaces.length })
+    this.logger.log(`onTick#items | ${JSON.stringify({ count: spaces.length })}`)
     await Promise.allSettled(spaces.map((v) => this.twitterSpaceQueueService.addById(v.id, { priority: 999 })))
   }
 }
