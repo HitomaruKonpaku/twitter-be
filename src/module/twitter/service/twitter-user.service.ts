@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import Bottleneck from 'bottleneck'
 import { BaseService } from '../../../shared/base/base.service'
-import { Logger } from '../../../shared/logger/logger'
+import { Logger } from '../../../shared/logger'
 import { TwitterGraphqlApi } from '../api/twitter-graphql.api'
 import { TwitterUser } from '../model/twitter-user.entity'
 import { TwitterUserRepository } from '../repository/twitter-user.repository'

@@ -1,6 +1,6 @@
 import { OnWorkerEvent, WorkerHost } from '@nestjs/bullmq'
 import { Job } from 'bullmq'
-import { Logger } from '../logger/logger'
+import { Logger } from '../logger'
 
 export abstract class BaseProcessor extends WorkerHost {
   protected abstract readonly logger: Logger

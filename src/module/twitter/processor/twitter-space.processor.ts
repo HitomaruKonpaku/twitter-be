@@ -1,7 +1,7 @@
 import { OnWorkerEvent, Processor } from '@nestjs/bullmq'
 import { Job, Worker } from 'bullmq'
 import { BaseProcessor } from '../../../shared/base/base.processor'
-import { Logger } from '../../../shared/logger/logger'
+import { Logger } from '../../../shared/logger'
 import { NumberUtil } from '../../../shared/util/number.util'
 import { TwitterApi } from '../api/twitter.api'
 import { TWITTER_SPACE_QUEUE_NAME } from '../constant/twitter.constant'

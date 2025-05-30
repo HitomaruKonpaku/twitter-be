@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import axios, { AxiosHeaders, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
 import { USER_AGENT } from '../../../constant/app.constant'
-import { Logger } from '../../../shared/logger/logger'
+import { Logger } from '../../../shared/logger'
 import { TWITTER_API_URL, TWITTER_PUBLIC_AUTHORIZATION } from '../constant/twitter.constant'
 
 @Injectable()
