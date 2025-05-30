@@ -1,6 +1,7 @@
 import { InjectQueue } from '@nestjs/bullmq'
 import { Injectable } from '@nestjs/common'
 import { JobsOptions, Queue } from 'bullmq'
+import ms from 'ms'
 import { NumberUtil } from '../../../shared/util/number.util'
 import { TWITTER_SPACE_QUEUE_NAME } from '../constant/twitter.constant'
 
@@ -20,10 +21,13 @@ export class TwitterSpaceQueueService {
         attempts: NumberUtil.parse(process.env.TWITTER_SPACE_QUEUE_ATTEMPTS, 3),
         backoff: {
           type: 'fixed',
-          delay: 60 * 1000,
+          delay: ms('1m'),
         },
         removeOnComplete: {
-          age: 3600,
+          age: ms('1h') * 1e-3,
+        },
+        removeOnFail: {
+          age: ms('1d') * 1e-3,
         },
         ...options,
       },
