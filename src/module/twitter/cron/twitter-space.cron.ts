@@ -26,6 +26,6 @@ export class TwitterSpaceCron {
     }
 
     this.logger.log(`onTick#items | ${JSON.stringify({ count: spaces.length })}`)
-    await Promise.allSettled(spaces.map((v) => this.twitterSpaceQueueService.addById(v.id, { priority: 999 })))
+    await Promise.allSettled(spaces.map((v) => this.twitterSpaceQueueService.add(v.id, { priority: 999 })))
   }
 }
