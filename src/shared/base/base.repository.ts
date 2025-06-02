@@ -1,4 +1,5 @@
 import { FindManyOptions, Repository } from 'typeorm'
+import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity'
 
 export abstract class BaseRepository<T> {
   constructor(
@@ -28,6 +29,17 @@ export abstract class BaseRepository<T> {
 
   public async updateById(id: string, data: Partial<T>) {
     const res = await this.repository.update({ id } as any, data as any)
+    return res
+  }
+
+  public async upsertById(data: QueryDeepPartialEntity<T>) {
+    const res = await this.repository.upsert(
+      data,
+      {
+        conflictPaths: ['id'],
+        skipUpdateIfNoValuesChanged: true,
+      },
+    )
     return res
   }
 
