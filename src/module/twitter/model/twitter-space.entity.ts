@@ -1,4 +1,4 @@
-import { Column, Entity, Index, PrimaryColumn } from 'typeorm'
+import { Column, Entity, PrimaryColumn } from 'typeorm'
 import { AudioSpaceState } from '../enum/twitter-graphql.enum'
 import { TwitterSpaceState } from '../enum/twitter-space.enum'
 import { TwitterUser } from './twitter-user.entity'
@@ -23,11 +23,9 @@ export class TwitterSpace {
   @Column({ name: 'creator_id', type: 'text' })
   creatorId: string
 
-  @Index()
   @Column({ name: 'state', type: 'text', nullable: true })
   state?: TwitterSpaceState
 
-  @Index()
   @Column({ name: 'alt_state', type: 'text', nullable: true })
   altState?: AudioSpaceState
 

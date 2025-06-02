@@ -1,4 +1,4 @@
-import { Column, Entity, Index, PrimaryColumn } from 'typeorm'
+import { Column, Entity, PrimaryColumn } from 'typeorm'
 import { TwitterSpace } from './twitter-space.entity'
 
 @Entity('twitter_user')
@@ -15,7 +15,6 @@ export class TwitterUser {
   @Column({ name: 'updated_at', type: 'numeric', nullable: true })
   updatedAt?: number
 
-  @Index()
   @Column({ name: 'username', type: 'text' })
   username: string
 
