@@ -18,6 +18,11 @@ export abstract class BaseService<T> {
     return res
   }
 
+  public async count() {
+    const res = await this.repository.count()
+    return res
+  }
+
   public async upsertById(data: QueryDeepPartialEntity<T>) {
     const { id } = (data as any)
     if (!id) {
@@ -29,8 +34,8 @@ export abstract class BaseService<T> {
     return res
   }
 
-  public async count() {
-    const res = await this.repository.count()
+  public async save(data: T) {
+    const res = await this.repository.save(data)
     return res
   }
 }

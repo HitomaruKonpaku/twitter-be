@@ -41,7 +41,7 @@ export class TwitterUserService extends BaseService<TwitterUser> {
   }
 
   public async save(data: TwitterUser) {
-    const res = await this.dbLimiter.schedule(() => this.upsertById(data))
+    const res = await this.dbLimiter.schedule(() => super.save(data))
     return res
   }
 

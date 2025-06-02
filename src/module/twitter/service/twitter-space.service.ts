@@ -138,7 +138,7 @@ export class TwitterSpaceService extends BaseService<TwitterSpace> {
   }
 
   public async save(data: TwitterSpace) {
-    const res = await this.dbLimiter.schedule(() => this.upsertById(data))
+    const res = await this.dbLimiter.schedule(() => super.save(data))
     return res
   }
 
