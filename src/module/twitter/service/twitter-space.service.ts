@@ -162,7 +162,7 @@ export class TwitterSpaceService extends BaseService<TwitterSpace> {
             username: TwitterSpaceUtil.parseParticipantUsername(v),
           }
           if (!res.id || !res.username) {
-            this.logger.warn('saveParticipants: DataError', { data: v })
+            this.logger.warn(`saveParticipants#data: ${JSON.stringify({ id: res.id, username: res.username, data: v })}`)
           }
           return res
         })
