@@ -155,7 +155,7 @@ export class TwitterSpaceService extends BaseService<TwitterSpace> {
     const id = TwitterSpaceUtil.parseAudioSpaceId(audioSpace)
     try {
       const { participants } = audioSpace
-      const tmpUsers = [...participants.admins, participants.speakers]
+      const tmpUsers = [...participants.admins, ...participants.speakers]
         .map((v) => {
           const res = {
             id: TwitterSpaceUtil.parseParticipantId(v),
