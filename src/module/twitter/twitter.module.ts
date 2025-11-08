@@ -17,6 +17,7 @@ import { TwitterSpaceRepository } from './repository/twitter-space.repository'
 import { TwitterUserRepository } from './repository/twitter-user.repository'
 import { TwitterSpaceQueueService } from './service/twitter-space-queue.service'
 import { TwitterSpaceService } from './service/twitter-space.service'
+import { TwitterTransactionService } from './service/twitter-transaction.service'
 import { TwitterUserQueueService } from './service/twitter-user-queue.service'
 import { TwitterUserService } from './service/twitter-user.service'
 
@@ -57,6 +58,7 @@ import { TwitterUserService } from './service/twitter-user.service'
     TwitterSpaceProcessor,
 
     TwitterApi,
+    TwitterTransactionService,
     TwitterGraphqlApi,
 
     TwitterSpaceCron,

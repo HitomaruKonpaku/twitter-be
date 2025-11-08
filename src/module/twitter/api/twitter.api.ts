@@ -3,6 +3,7 @@ import axios, { AxiosHeaders, AxiosInstance, AxiosRequestConfig, AxiosResponse }
 import { USER_AGENT } from '../../../constant/app.constant'
 import { Logger } from '../../../shared/logger'
 import { TWITTER_API_URL, TWITTER_PUBLIC_AUTHORIZATION } from '../constant/twitter.constant'
+import { TwitterTransactionService } from '../service/twitter-transaction.service'
 
 @Injectable()
 export class TwitterApi {
@@ -13,7 +14,9 @@ export class TwitterApi {
   private guestToken: string
   private rateLimits: Record<string, any> = {}
 
-  constructor() {
+  constructor(
+    public readonly twitterTransactionService: TwitterTransactionService,
+  ) {
     this.initInstance()
   }
 
@@ -38,6 +41,11 @@ export class TwitterApi {
     const token = /(?<=gt=)\d+/.exec(data)?.[0]
     this.logger.debug('<-- fetchGuestToken', { token })
     return token
+  }
+
+  public async getTransactionId(method: string, url: string): Promise<string> {
+    const id = this.twitterTransactionService.generateTransactionId(method, url)
+    return id
   }
 
   public getRateLimitByName(name: string) {
@@ -112,7 +120,24 @@ export class TwitterApi {
     const headers = config.headers as AxiosHeaders
     const authorization = process.env.TWITTER_PUBLIC_AUTHORIZATION || TWITTER_PUBLIC_AUTHORIZATION
     headers.set('authorization', authorization)
+    await this.handleRequestXClientTransactionId(config)
+    await this.handleRequestXGuestToken(config)
+  }
 
+  private async handleRequestXClientTransactionId(config: AxiosRequestConfig) {
+    const headers = config.headers as AxiosHeaders
+    const url = `/${config.url}`
+    try {
+      const transactionId = await this.getTransactionId(config.method, url)
+      headers.set('x-client-transaction-id', transactionId)
+    } catch (error) {
+      this.logger.error(`handleRequest#x-client-transaction-id: ${error.message} | ${JSON.stringify({ url })}`)
+      throw error
+    }
+  }
+
+  private async handleRequestXGuestToken(config: AxiosRequestConfig) {
+    const headers = config.headers as AxiosHeaders
     if (!headers.has('x-guest-token')) {
       const cookie = [
         ['auth_token', process.env.TWITTER_AUTH_TOKEN],
@@ -125,14 +150,13 @@ export class TwitterApi {
 
     const url = this.getRateLimitRequestUrl(config)
     const rateLimit = this.rateLimits[url]
-
     try {
       if (!this.guestToken || (rateLimit && rateLimit.limit && rateLimit.remaining === 0)) {
         this.guestToken = await this.fetchGuestToken()
       }
       headers.set('x-guest-token', this.guestToken)
     } catch (error) {
-      this.logger.error(`handleRequest: ${error.message}`, null, { url, rateLimit })
+      this.logger.error(`handleRequest#x-guest-token: ${error.message} | ${JSON.stringify({ url, rateLimit })}`)
     }
   }
 
